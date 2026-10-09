@@ -24,7 +24,9 @@ class ConversionControllerTest {
   void convertsMilestone() throws Exception {
     mvc.perform(get("/api/berlin-clock-time").param("digitalTime", "12:32:00"))
         .andExpect(status().isOk())
-        .andExpect(content().json("{\"singleMinutesRow\":\"YYOO\"}", JsonCompareMode.STRICT));
+        .andExpect(content().json(
+                "{\"singleMinutesRow\":\"YYOO\",\"fiveMinutesRow\":\"YYRYYROOOOO\"}",
+                JsonCompareMode.STRICT));
   }
 
   @Test

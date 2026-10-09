@@ -26,7 +26,9 @@ class ConversionHttpTest {
   void actualServerConvertsMilestone() throws Exception {
     var response = get("/api/berlin-clock-time?digitalTime=12%3A32%3A00");
     assertEquals(200, response.statusCode());
-    assertEquals("{\"singleMinutesRow\":\"YYOO\"}", response.body());
+    assertEquals(
+            "{\"singleMinutesRow\":\"YYOO\",\"fiveMinutesRow\":\"YYRYYROOOOO\"}",
+            response.body());
   }
 
   @Test
