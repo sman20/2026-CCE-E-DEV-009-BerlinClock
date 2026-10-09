@@ -9,4 +9,8 @@ public final class BerlinClockConverter {
   public FiveMinutesRow toFiveMinutesRow(DigitalTime time) {
     return FiveMinutesRow.from(time);
   }
+
+  public SingleHoursRow toSingleHoursRow(DigitalTime time) {
+    return SingleHoursRow.from(time);
+  }
 }

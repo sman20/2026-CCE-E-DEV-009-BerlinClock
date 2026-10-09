@@ -25,7 +25,7 @@ class ConversionControllerTest {
     mvc.perform(get("/api/berlin-clock-time").param("digitalTime", "12:32:00"))
         .andExpect(status().isOk())
         .andExpect(content().json(
-                "{\"singleMinutesRow\":\"YYOO\",\"fiveMinutesRow\":\"YYRYYROOOOO\"}",
+                "{\"singleMinutesRow\":\"YYOO\",\"fiveMinutesRow\":\"YYRYYROOOOO\",\"singleHoursRow\":\"RROO\"}",
                 JsonCompareMode.STRICT));
   }
 
