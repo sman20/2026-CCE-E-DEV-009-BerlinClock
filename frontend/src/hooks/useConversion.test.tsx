@@ -6,9 +6,9 @@ import { deferred } from '../test/deferred';
 it('owns pending, success and failure transitions', async () => {
   const request = deferred<string>();
   const convert = vi
-      .fn()
-      .mockReturnValueOnce(request.promise)
-      .mockRejectedValueOnce(new Error('Invalid time'));
+    .fn()
+    .mockReturnValueOnce(request.promise)
+    .mockRejectedValueOnce(new Error('Invalid time'));
   const { result } = renderHook(() => useConversion(convert));
   expect(result.current.state.status).toBe('idle');
   act(() => {

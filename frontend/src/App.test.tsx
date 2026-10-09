@@ -15,13 +15,13 @@ it('loads the forward example from the API with accessible controls and heading 
   );
   render(<App />);
   expect(
-    screen.getByRole('heading', { name: 'Berlin Clock converter' }),
+    screen.getByRole('heading', { name: 'Berlin Clock Time converter' }),
   ).toBeInTheDocument();
   expect(document.querySelector('header img')).toHaveAttribute(
     'src',
     '/berlin-clock.jpg',
   );
-  expect(document.querySelector('header img')).toHaveAttribute('alt', '');
+  expect(document.querySelector('header img')).toHaveAttribute('alt', 'Berlin Clock');
   expect(
     await screen.findByText('ORROORRROYYROOOOOOOOYYOO'),
   ).toBeInTheDocument();

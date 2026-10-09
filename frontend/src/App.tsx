@@ -1,12 +1,12 @@
 import ConverterCard from './components/ConverterCard';
-import { toBerlinClockTime, toDigitalTime } from './api';
+import {toBerlinClockTime, toDigitalTime} from './api';
 import './styles.css';
 
 export default function App() {
     return (
         <main>
             <header>
-                <img src="/berlin-clock.jpg" width={100} height={100} alt="Berlin Clock" />
+                <img src="/berlin-clock.jpg" width={64} height={64} alt="Berlin Clock" />
                 <h1>Berlin Clock Time converter</h1>
             </header>
             <ConverterCard

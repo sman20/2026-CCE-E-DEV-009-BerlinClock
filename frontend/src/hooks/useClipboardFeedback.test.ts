@@ -29,28 +29,28 @@ it('copies exact text, awaits success and expires feedback after 1.2 seconds', a
   expect(result.current.feedback).toBe('');
 });
 it.each(['unavailable', 'rejected'])(
-    'reports truthful %s clipboard failure',
-    async (mode) => {
-      if (mode === 'unavailable')
-        Object.defineProperty(navigator, 'clipboard', {
-          configurable: true,
-          value: undefined,
-        });
-      else clipboard(vi.fn().mockRejectedValue(new Error('denied')));
-      const { result } = renderHook(useClipboardFeedback);
-      await act(async () => {
-        await result.current.copy('reading');
+  'reports truthful %s clipboard failure',
+  async (mode) => {
+    if (mode === 'unavailable')
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: undefined,
       });
-      expect(result.current.feedback).toBe(
-          'Could not copy. Select the result to copy it manually.',
-      );
-    },
+    else clipboard(vi.fn().mockRejectedValue(new Error('denied')));
+    const { result } = renderHook(useClipboardFeedback);
+    await act(async () => {
+      await result.current.copy('reading');
+    });
+    expect(result.current.feedback).toBe(
+      'Could not copy. Select the result to copy it manually.',
+    );
+  },
 );
 it('invalidates a pending write and timer when the input or conversion changes', async () => {
   vi.useFakeTimers();
   const write = deferred<void>();
   clipboard(
-      vi.fn().mockReturnValueOnce(write.promise).mockResolvedValue(undefined),
+    vi.fn().mockReturnValueOnce(write.promise).mockResolvedValue(undefined),
   );
   const { result } = renderHook(useClipboardFeedback);
   act(() => {
