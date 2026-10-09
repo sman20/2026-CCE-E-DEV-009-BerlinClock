@@ -1,6 +1,7 @@
 package com.sman20.berlinclock.web;
 
 import com.sman20.berlinclock.domain.BerlinClockConverter;
+import com.sman20.berlinclock.domain.BerlinClockTime;
 import com.sman20.berlinclock.domain.DigitalTime;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,4 +21,11 @@ public class ConversionController {
     }
 
     public record BerlinClockTimeResponse(String berlinClockTime) {}
+
+    @GetMapping("/api/digital-time")
+    public DigitalTimeResponse reverse(@RequestParam String berlinClockTime) {
+        return new DigitalTimeResponse(converter.toDigitalTime(BerlinClockTime.parse(berlinClockTime)).text());
+    }
+
+    public record DigitalTimeResponse(String digitalTime) {}
 }

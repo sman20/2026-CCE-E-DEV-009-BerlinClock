@@ -9,6 +9,6 @@ public final class BerlinClockConverter {
   }
 
   public DigitalTime toDigitalTime(BerlinClockTime time) {
-    return new DigitalTime(0, 0, 0);
+    return new DigitalTime(time.hours(), time.minutes(), time.secondsLamp().isOn() ? 0 : 1);
   }
 }
