@@ -21,4 +21,9 @@ public final class BerlinClockConverter {
   public SecondsLamp toSecondsLamp(DigitalTime time) {
     return SecondsLamp.from(time);
   }
+
+  public BerlinClockTime toBerlinClockTime(DigitalTime time) {
+    return new BerlinClockTime(SecondsLamp.from(time), FiveHoursRow.from(time),
+            SingleHoursRow.from(time), FiveMinutesRow.from(time), SingleMinutesRow.from(time));
+  }
 }

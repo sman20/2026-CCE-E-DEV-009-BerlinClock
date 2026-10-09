@@ -21,11 +21,11 @@ class ConversionControllerTest {
   @Autowired MockMvc mvc;
 
   @Test
-  void convertsMilestone() throws Exception {
+  void convertsEntireClock() throws Exception {
     mvc.perform(get("/api/berlin-clock-time").param("digitalTime", "12:32:00"))
         .andExpect(status().isOk())
         .andExpect(content().json(
-                "{\"singleMinutesRow\":\"YYOO\",\"fiveMinutesRow\":\"YYRYYROOOOO\",\"singleHoursRow\":\"RROO\",\"fiveHoursRow\":\"RROO\",\"secondsLamp\":\"Y\"}",
+                "{\"berlinClockTime\":\"YRROORROOYYRYYROOOOOYYOO\"}",
                 JsonCompareMode.STRICT));
   }
 
