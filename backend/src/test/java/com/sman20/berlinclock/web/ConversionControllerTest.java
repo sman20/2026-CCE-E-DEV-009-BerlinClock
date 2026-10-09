@@ -24,14 +24,13 @@ class ConversionControllerTest {
   void convertsEntireClock() throws Exception {
     mvc.perform(get("/api/berlin-clock-time").param("digitalTime", "12:32:00"))
         .andExpect(status().isOk())
-        .andExpect(content().json(
-                "{\"berlinClockTime\":\"YRROORROOYYRYYROOOOOYYOO\"}",
-                JsonCompareMode.STRICT));
+        .andExpect(content().json("{\"berlinClockTime\":\"YRROORROOYYRYYROOOOOYYOO\"}", JsonCompareMode.STRICT));
   }
 
-  @Test
-  void missingParameterHasConsistentProblemType() throws Exception {
-    mvc.perform(get("/api/berlin-clock-time"))
+  @ParameterizedTest
+  @ValueSource(strings = {"/api/berlin-clock-time", "/api/digital-time"})
+  void missingParameterHasConsistentProblemType(String path) throws Exception {
+    mvc.perform(get(path))
         .andExpect(status().isBadRequest())
         .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
         .andExpect(jsonPath("$.type").value("urn:berlin-clock:invalid-input"))
@@ -62,5 +61,32 @@ class ConversionControllerTest {
         .andExpect(jsonPath("$.title").value("Bad Request"))
         .andExpect(jsonPath("$.status").value(400))
         .andExpect(jsonPath("$.detail").isNotEmpty());
+  }
+
+  @Test
+  void reversesReadingWithExactFinalResponse() throws Exception {
+    mvc.perform(get("/api/digital-time").param("berlinClockTime", "ORRRRRRROYYRYYRYYRYYYYYY"))
+            .andExpect(status().isOk())
+            .andExpect(content().json("{\"digitalTime\":\"23:59:01\"}", JsonCompareMode.STRICT));
+  }
+
+  @ParameterizedTest
+  @ValueSource(
+          strings = {"",
+              "yooooooooooooooooooooooo",
+              "YRRRRRRRROOOOOOOOOOOOOOO",
+              "YROROOOOOOOOOOOOOOOOOOOO",
+              "YOOOOOOOOYYYOOOOOOOOOOOO",
+              "YOOOOOOOOOOOOOOOOOOOOOOO\n",
+              " YOOOOOOOOOOOOOOOOOOOOOOO"
+          })
+  void malformedReverseInputUsesProblemDetail(String input) throws Exception {
+    mvc.perform(get("/api/digital-time").param("berlinClockTime", input))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentTypeCompatibleWith("application/problem+json"))
+            .andExpect(jsonPath("$.type").value("urn:berlin-clock:invalid-input"))
+            .andExpect(jsonPath("$.title").value("Bad Request"))
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").isNotEmpty());
   }
 }

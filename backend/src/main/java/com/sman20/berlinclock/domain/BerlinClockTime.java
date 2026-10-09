@@ -31,4 +31,9 @@ public record BerlinClockTime(
   public int minutes() {
     return fiveMinutesRow.minutes() + singleMinutesRow.minutes();
   }
+
+  public static BerlinClockTime parse(String text) {
+    return new BerlinClockTime(new SecondsLamp("Y"), new FiveHoursRow("OOOO"), new SingleHoursRow("OOOO"),
+            new FiveMinutesRow("OOOOOOOOOOO"), new SingleMinutesRow("OOOO"));
+  }
 }

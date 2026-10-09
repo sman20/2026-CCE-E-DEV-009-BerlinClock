@@ -2,12 +2,16 @@ package com.sman20.berlinclock.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class BerlinClockTimeTest {
   private static final SecondsLamp SECONDS = new SecondsLamp("O");
@@ -29,9 +33,7 @@ class BerlinClockTimeTest {
   void rejectsTwentyFourHours() {
     assertThrows(
         InvalidTimeException.class,
-        () ->
-            new BerlinClockTime(
-                SECONDS, FIVE_HOURS, new SingleHoursRow("RRRR"), FIVE_MINUTES, SINGLE_MINUTES));
+        () -> new BerlinClockTime(SECONDS, FIVE_HOURS, new SingleHoursRow("RRRR"), FIVE_MINUTES, SINGLE_MINUTES));
   }
 
   static Stream<Arguments> absentComponents() {
@@ -54,5 +56,45 @@ class BerlinClockTimeTest {
     assertThrows(
         NullPointerException.class,
         () -> new BerlinClockTime(seconds, fiveHours, singleHours, fiveMinutes, singleMinutes));
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(
+          strings = {
+                  "Y",
+                  "YOOOOOOOOOOOOOOOOOOOOOO",
+                  "YOOOOOOOOOOOOOOOOOOOOOOOO",
+                  "yooooooooooooooooooooooo",
+                  " YOOOOOOOOOOOOOOOOOOOOOOO",
+                  "YOOOOOOOOOOOOOOOOOOOOOOO ",
+                  "YOOOOOOOOOOOOOOOOOOOOOOO\n",
+                  "YOOOOOOOOOOOOOOOOOOOOOOO\r\n",
+                  "0OOOOOOOOOOOOOOOOOOOOOOO",
+                  "ROOOOOOOOOOOOOOOOOOOOOOO"
+          })
+  void rejectsMalformedFramingAndLamp(String text) {
+    assertThrows(InvalidTimeException.class, () -> BerlinClockTime.parse(text));
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+          "RORO,OOOO,OOOOOOOOOOO,OOOO", "OOOO,RORO,OOOOOOOOOOO,OOOO",
+          "OOOO,OOOO,YOYOOOOOOOO,OOOO", "OOOO,OOOO,OOOOOOOOOOO,YOYO",
+          "OOOO,OOOO,YYYOOOOOOOO,OOOO", "OOOO,OOOO,YYRYYYOOOOO,OOOO",
+          "RRRR,RRRR,OOOOOOOOOOO,OOOO", "YOOO,OOOO,OOOOOOOOOOO,OOOO",
+          "OOOO,OOOO,OOOOOOOOOOO,ROOO"
+  })
+  void parsingCannotBypassRowOrCompositionInvariants(
+          String fiveHours, String singleHours, String fiveMinutes, String singleMinutes) {
+    assertThrows(
+            InvalidTimeException.class,
+            () -> BerlinClockTime.parse("Y" + fiveHours + singleHours + fiveMinutes + singleMinutes));
+  }
+
+  @ParameterizedTest
+  @CsvSource({"Y,exactly 24 lamps", "YRRRRRRRROOOOOOOOOOOOOOO,at most 23 hours"})
+  void expectedFailuresExplainFramingAndCombinedHours(String text, String expected) {
+    assertTrue(assertThrows(InvalidTimeException.class, () -> BerlinClockTime.parse(text)).getMessage().contains(expected));
   }
 }

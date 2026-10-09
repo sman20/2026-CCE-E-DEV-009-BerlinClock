@@ -7,4 +7,8 @@ public final class BerlinClockConverter {
             SecondsLamp.from(time), FiveHoursRow.from(time), SingleHoursRow.from(time),
             FiveMinutesRow.from(time), SingleMinutesRow.from(time));
   }
+
+  public DigitalTime toDigitalTime(BerlinClockTime time) {
+    return new DigitalTime(0, 0, 0);
+  }
 }
