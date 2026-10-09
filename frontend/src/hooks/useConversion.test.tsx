@@ -6,9 +6,9 @@ import { deferred } from '../test/deferred';
 it('owns pending, success and failure transitions', async () => {
   const request = deferred<string>();
   const convert = vi
-    .fn()
-    .mockReturnValueOnce(request.promise)
-    .mockRejectedValueOnce(new Error('Invalid time'));
+      .fn()
+      .mockReturnValueOnce(request.promise)
+      .mockRejectedValueOnce(new Error('Invalid time'));
   const { result } = renderHook(() => useConversion(convert));
   expect(result.current.state.status).toBe('idle');
   act(() => {
@@ -30,34 +30,36 @@ it('owns pending, success and failure transitions', async () => {
     message: 'Invalid time',
   });
 });
-it('aborts replacement and ignores late success even if a fake ignores cancellation', async () => {
-  const first = deferred<string>();
-  const second = deferred<string>();
-  const convert = vi
-    .fn()
-    .mockReturnValueOnce(first.promise)
-    .mockReturnValueOnce(second.promise);
-  const { result } = renderHook(() => useConversion(convert));
-  act(() => {
-    void result.current.run('first');
-  });
-  const oldSignal = convert.mock.calls[0][1] as AbortSignal;
-  act(() => {
-    void result.current.run('second');
-  });
-  expect(oldSignal.aborted).toBe(true);
-  await act(async () => {
-    first.resolve('stale');
-  });
-  expect(result.current.state.status).toBe('pending');
-  await act(async () => {
-    second.resolve('current');
-  });
-  expect(result.current.state).toEqual({
-    status: 'success',
-    result: 'current',
-  });
-});
+it.each(['success', 'failure'])(
+    'aborts replacement and ignores late %s even if a fake ignores cancellation', async (completion) => {
+      const first = deferred<string>();
+      const second = deferred<string>();
+      const convert = vi
+          .fn()
+          .mockReturnValueOnce(first.promise)
+          .mockReturnValueOnce(second.promise);
+      const { result } = renderHook(() => useConversion(convert));
+      act(() => {
+        void result.current.run('first');
+      });
+      const oldSignal = convert.mock.calls[0][1] as AbortSignal;
+      act(() => {
+        void result.current.run('second');
+      });
+      expect(oldSignal.aborted).toBe(true);
+      await act(async () => {
+        if (completion === 'success') first.resolve('stale');
+        else first.reject(new Error('stale'));
+      });
+      expect(result.current.state.status).toBe('pending');
+      await act(async () => {
+        second.resolve('current');
+      });
+      expect(result.current.state).toEqual({
+        status: 'success',
+        result: 'current',
+      });
+    });
 it('invalidation clears output and suppresses late rejection', async () => {
   const pending = deferred<string>();
   const convert = vi.fn().mockReturnValue(pending.promise);

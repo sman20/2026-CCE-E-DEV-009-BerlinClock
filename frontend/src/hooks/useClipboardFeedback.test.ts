@@ -29,28 +29,28 @@ it('copies exact text, awaits success and expires feedback after 1.2 seconds', a
   expect(result.current.feedback).toBe('');
 });
 it.each(['unavailable', 'rejected'])(
-  'reports truthful %s clipboard failure',
-  async (mode) => {
-    if (mode === 'unavailable')
-      Object.defineProperty(navigator, 'clipboard', {
-        configurable: true,
-        value: undefined,
+    'reports truthful %s clipboard failure',
+    async (mode) => {
+      if (mode === 'unavailable')
+        Object.defineProperty(navigator, 'clipboard', {
+          configurable: true,
+          value: undefined,
+        });
+      else clipboard(vi.fn().mockRejectedValue(new Error('denied')));
+      const { result } = renderHook(useClipboardFeedback);
+      await act(async () => {
+        await result.current.copy('reading');
       });
-    else clipboard(vi.fn().mockRejectedValue(new Error('denied')));
-    const { result } = renderHook(useClipboardFeedback);
-    await act(async () => {
-      await result.current.copy('reading');
-    });
-    expect(result.current.feedback).toBe(
-      'Could not copy. Select the result to copy it manually.',
-    );
-  },
+      expect(result.current.feedback).toBe(
+          'Could not copy. Select the result to copy it manually.',
+      );
+    },
 );
 it('invalidates a pending write and timer when the input or conversion changes', async () => {
   vi.useFakeTimers();
   const write = deferred<void>();
   clipboard(
-    vi.fn().mockReturnValueOnce(write.promise).mockResolvedValue(undefined),
+      vi.fn().mockReturnValueOnce(write.promise).mockResolvedValue(undefined),
   );
   const { result } = renderHook(useClipboardFeedback);
   act(() => {
@@ -69,35 +69,37 @@ it('invalidates a pending write and timer when the input or conversion changes',
   expect(result.current.feedback).toBe('');
   expect(vi.getTimerCount()).toBe(0);
 });
-it('a new copy attempt ignores older late success or rejection', async () => {
-  const old = deferred<void>();
-  const current = deferred<void>();
-  clipboard(
-    vi
-      .fn()
-      .mockReturnValueOnce(old.promise)
-      .mockReturnValueOnce(current.promise),
-  );
-  const { result } = renderHook(useClipboardFeedback);
-  act(() => {
-    void result.current.copy('same');
-    void result.current.copy('same');
-  });
-  await act(async () => {
-    current.reject(new Error('denied'));
-  });
-  const failure = result.current.feedback;
-  await act(async () => {
-    old.resolve();
-  });
-  expect(result.current.feedback).toBe(failure);
-  expect(failure).toContain('Could not copy');
-});
+it.each(['success', 'failure'])(
+    'a new copy attempt ignores older late %s', async (completion) => {
+      const old = deferred<void>();
+      const current = deferred<void>();
+      clipboard(
+          vi
+              .fn()
+              .mockReturnValueOnce(old.promise)
+              .mockReturnValueOnce(current.promise),
+      );
+      const { result } = renderHook(useClipboardFeedback);
+      act(() => {
+        void result.current.copy('same');
+        void result.current.copy('same');
+      });
+      await act(async () => {
+        current.reject(new Error('denied'));
+      });
+      const failure = result.current.feedback;
+      await act(async () => {
+        if (completion === 'success') old.resolve();
+        else old.reject(new Error('older failure'));
+      });
+      expect(result.current.feedback).toBe(failure);
+      expect(failure).toContain('Could not copy');
+    });
 it('clears timers and ignores pending writes on unmount', async () => {
   vi.useFakeTimers();
   const late = deferred<void>();
   clipboard(
-    vi.fn().mockResolvedValueOnce(undefined).mockReturnValueOnce(late.promise),
+      vi.fn().mockResolvedValueOnce(undefined).mockReturnValueOnce(late.promise),
   );
   const { result, unmount } = renderHook(useClipboardFeedback);
   await act(async () => {
