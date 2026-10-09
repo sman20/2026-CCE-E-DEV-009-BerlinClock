@@ -15,19 +15,9 @@ public class ConversionController {
     }
 
     @GetMapping("/api/berlin-clock-time")
-    public RowResponse convert(@RequestParam String digitalTime) {
-        DigitalTime time = DigitalTime.parse(digitalTime);
-        return new RowResponse(
-                converter.toSingleMinutesRow(time).lamps(),
-                converter.toFiveMinutesRow(time).lamps(),
-                converter.toSingleHoursRow(time).lamps(),
-                converter.toFiveHoursRow(time).lamps(),
-                converter.toSecondsLamp(time).lamps());
+    public BerlinClockTimeResponse convert(@RequestParam String digitalTime) {
+        return new BerlinClockTimeResponse(converter.toBerlinClockTime(DigitalTime.parse(digitalTime)).lamps());
     }
 
-    public record RowResponse(String singleMinutesRow,
-                              String fiveMinutesRow,
-                              String singleHoursRow,
-                              String fiveHoursRow,
-                              String secondsLamp) {}
+    public record BerlinClockTimeResponse(String berlinClockTime) {}
 }
