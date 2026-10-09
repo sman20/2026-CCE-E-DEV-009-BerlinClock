@@ -20,8 +20,12 @@ public class ConversionController {
         return new RowResponse(
                 converter.toSingleMinutesRow(time).lamps(),
                 converter.toFiveMinutesRow(time).lamps(),
-                converter.toSingleHoursRow(time).lamps());
+                converter.toSingleHoursRow(time).lamps(),
+                converter.toFiveHoursRow(time).lamps());
     }
 
-    public record RowResponse(String singleMinutesRow, String fiveMinutesRow, String singleHoursRow) {}
+    public record RowResponse(String singleMinutesRow,
+                              String fiveMinutesRow,
+                              String singleHoursRow,
+                              String fiveHoursRow) {}
 }
