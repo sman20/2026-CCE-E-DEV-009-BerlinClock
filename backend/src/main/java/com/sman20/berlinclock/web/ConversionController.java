@@ -17,8 +17,11 @@ public class ConversionController {
     @GetMapping("/api/berlin-clock-time")
     public RowResponse convert(@RequestParam String digitalTime) {
         DigitalTime time = DigitalTime.parse(digitalTime);
-        return new RowResponse(converter.toSingleMinutesRow(time).lamps());
+        return new RowResponse(
+                converter.toSingleMinutesRow(time).lamps(),
+                converter.toFiveMinutesRow(time).lamps()
+        );
     }
 
-    public record RowResponse(String singleMinutesRow) {}
+    public record RowResponse(String singleMinutesRow, String fiveMinutesRow) {}
 }
