@@ -1,30 +1,18 @@
 package com.sman20.berlinclock.domain;
 
 public record FiveMinutesRow(String lamps) {
-  private static final String COLORS = "YYRYYRYYRYY";
-  static final int LENGTH = COLORS.length();
+  private static final LampPattern LAMP_PATTERN = new LampPattern("YYRYYRYYRYY");
+  static final int LENGTH = LAMP_PATTERN.length();
 
   public FiveMinutesRow {
-    if (lamps == null || lamps.length() != LENGTH) {
-      throw new InvalidTimeException("Five Minutes Row must contain " + LENGTH + " lamps.");
-    }
-    boolean off = false;
-    for (int i = 0; i < LENGTH; i++) {
-      if (lamps.charAt(i) == 'O') {
-        off = true;
-      } else if (off || lamps.charAt(i) != COLORS.charAt(i)) {
-        throw new InvalidTimeException("Row must contain prescribed colours followed by O lamps.");
-      }
-    }
+    LAMP_PATTERN.requireValid(lamps, "Five Minutes Row");
   }
 
   static FiveMinutesRow from(DigitalTime time) {
-    int count = time.minutes() / 5;
-    return new FiveMinutesRow(COLORS.substring(0, count) + "O".repeat(LENGTH - count));
+    return new FiveMinutesRow(LAMP_PATTERN.illuminate(time.minutes() / 5));
   }
 
   int minutes() {
-    int firstOff = lamps.indexOf('O');
-    return 5 * (firstOff < 0 ? LENGTH : firstOff);
+    return 5 * LAMP_PATTERN.illuminatedCount(lamps);
   }
 }
