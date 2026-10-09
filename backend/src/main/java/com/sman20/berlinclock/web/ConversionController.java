@@ -21,11 +21,13 @@ public class ConversionController {
                 converter.toSingleMinutesRow(time).lamps(),
                 converter.toFiveMinutesRow(time).lamps(),
                 converter.toSingleHoursRow(time).lamps(),
-                converter.toFiveHoursRow(time).lamps());
+                converter.toFiveHoursRow(time).lamps(),
+                converter.toSecondsLamp(time).lamps());
     }
 
     public record RowResponse(String singleMinutesRow,
                               String fiveMinutesRow,
                               String singleHoursRow,
-                              String fiveHoursRow) {}
+                              String fiveHoursRow,
+                              String secondsLamp) {}
 }
