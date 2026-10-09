@@ -1,13 +1,18 @@
 package com.sman20.berlinclock.domain;
 
 public record SingleHoursRow(String lamps) {
-  static final int LENGTH = 4;
+  private static final LampPattern LAMP_PATTERN = new LampPattern("RRRR");
+  static final int LENGTH = LAMP_PATTERN.length();
+
+  public SingleHoursRow {
+    LAMP_PATTERN.requireValid(lamps, "Single Hours Row");
+  }
 
   static SingleHoursRow from(DigitalTime time) {
-    return new SingleHoursRow("O".repeat(LENGTH));
+    return new SingleHoursRow(LAMP_PATTERN.illuminate(time.hours() % 5));
   }
 
   int hours() {
-    return 0;
+    return 1 * LAMP_PATTERN.illuminatedCount(lamps);
   }
 }

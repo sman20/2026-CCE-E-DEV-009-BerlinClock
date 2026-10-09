@@ -19,9 +19,9 @@ public class ConversionController {
         DigitalTime time = DigitalTime.parse(digitalTime);
         return new RowResponse(
                 converter.toSingleMinutesRow(time).lamps(),
-                converter.toFiveMinutesRow(time).lamps()
-        );
+                converter.toFiveMinutesRow(time).lamps(),
+                converter.toSingleHoursRow(time).lamps());
     }
 
-    public record RowResponse(String singleMinutesRow, String fiveMinutesRow) {}
+    public record RowResponse(String singleMinutesRow, String fiveMinutesRow, String singleHoursRow) {}
 }
