@@ -41,4 +41,5 @@ async function request(path: string, field: string, signal: AbortSignal): Promis
 export const toBerlinClockTime: Conversion = (input, signal) => request(
     `/api/berlin-clock-time?${new URLSearchParams({ digitalTime: input })}`, 'berlinClockTime', signal);
 
-export const toDigitalTime: Conversion = async () => '';
+export const toDigitalTime: Conversion = (input, signal) => request(
+    `/api/digital-time?${new URLSearchParams({ berlinClockTime: input })}`, 'digitalTime', signal);
