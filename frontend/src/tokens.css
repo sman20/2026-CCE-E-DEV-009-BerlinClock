@@ -1,0 +1,80 @@
+:root {
+  --lamp-red: #ff0000;
+  --lamp-yellow: #ffff00;
+  --lamp-off: #ffffff;
+  --lamp-stroke: #555555;
+  --flag-black: #000000;
+  --flag-red: #dd0000;
+  --flag-gold: #ffce00;
+  --ink-900: #111111;
+  --ink-700: #333333;
+  --ink-500: #555555;
+  --ink-400: #8a8a8a;
+  --ink-200: #d4d4d4;
+  --ink-100: #ededed;
+  --ink-50: #f6f6f6;
+  --white: #ffffff;
+  --signal-error: #c40000;
+  --signal-ok: #1f7a3a;
+  --fg-1: var(--ink-900);
+  --fg-2: var(--ink-500);
+  --fg-3: var(--ink-400);
+  --fg-inverse: var(--white);
+  --surface-page: var(--ink-50);
+  --surface-card: var(--white);
+  --surface-sunken: var(--ink-100);
+  --border-strong: var(--lamp-stroke);
+  --border-subtle: var(--ink-200);
+  --text-body: var(--fg-1);
+  --text-muted: var(--fg-2);
+  --text-error: var(--signal-error);
+  --action-primary-bg: var(--ink-900);
+  --action-primary-fg: var(--white);
+  --action-primary-hover: var(--ink-700);
+  --focus-ring: var(--lamp-yellow);
+}
+:root {
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-segment: 'DSEG7 Classic', 'IBM Plex Mono', monospace;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --text-2xl: 40px;
+  --text-readout: 72px;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --leading-tight: 1.15;
+  --leading-body: 1.5;
+  --tracking-caps: 0.08em;
+  --tracking-lamp: 0.18em;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lamp: 20px;
+  --radius-lamp-inner: 2px;
+  --stroke-lamp: 4px;
+  --stroke-ui: 2px;
+  --lamp-row-height: 76px;
+  --lamp-row-gap: 10px;
+  --lamp-gap: 12px;
+  --lamp-seconds-size: 130px;
+  --clock-ref-width: 680px;
+  --shadow-card: 0 1px 0 rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --ease-lamp: cubic-bezier(0.2, 0.7, 0.2, 1); /* @kind other */
+  --dur-lamp: 120ms; /* @kind other */
+  --dur-ui: 150ms; /* @kind other */
+}
