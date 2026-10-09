@@ -27,7 +27,7 @@ class ConversionHttpTest {
     var response = get("/api/berlin-clock-time?digitalTime=12%3A32%3A00");
     assertEquals(200, response.statusCode());
     assertEquals(
-            "{\"singleMinutesRow\":\"YYOO\",\"fiveMinutesRow\":\"YYRYYROOOOO\",\"singleHoursRow\":\"RROO\",\"fiveHoursRow\":\"RROO\"}",
+            "{\"singleMinutesRow\":\"YYOO\",\"fiveMinutesRow\":\"YYRYYROOOOO\",\"singleHoursRow\":\"RROO\",\"fiveHoursRow\":\"RROO\",\"secondsLamp\":\"Y\"}",
             response.body());
   }
 

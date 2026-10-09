@@ -17,4 +17,8 @@ public final class BerlinClockConverter {
   public FiveHoursRow toFiveHoursRow(DigitalTime time) {
     return FiveHoursRow.from(time);
   }
+
+  public SecondsLamp toSecondsLamp(DigitalTime time) {
+    return SecondsLamp.from(time);
+  }
 }
